@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+dependencies = [
+    "pytest",
+    "ruff",
+    "numpy==2.3.1",
+    "torch==2.2.1+cu121",
+]
+
+[tool.setuptools.packages]
+find = {}
+
+
+[project]
+dynamic = ["version"]
+name = "proshantos_ml_models"
+version = "0.pt.tr.0.1"
+authors = [
+    {name = "Proshanto Chanda"}
+]
+maintainers = [
+    {name = "Proshanto Chanda"}
+]
+description = "A group of machine learning models implemented by Proshanto Chanda."
+readme = "README.md"
