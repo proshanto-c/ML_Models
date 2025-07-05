@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 from transformers.transformer.encoder import EncoderBlock
 from transformers.transformer.decoder import DecoderBlock
-from transformers.transformer.mhsa import MultiHeadSelfAttention
 import numpy as np
 
 class Transformer(nn.Module):
@@ -19,10 +18,14 @@ class Transformer(nn.Module):
     def forward(self, x):
         PE = get_positional_encoding(self.seq_len, self.d_model)
         x = x + PE.unsqueeze(0)
+
+
         enc_out = x
         for e in self.encoder_blocks:
             enc_out = e(enc_out)
-        dec_out = x
+        
+        
+        dec_out = enc_out
         for d in self.decoder_blocks:
             dec_out = d(dec_out, enc_out)
         out = self.final_linear(out)

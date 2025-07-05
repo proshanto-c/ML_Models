@@ -1,9 +1,8 @@
-import torch
 import torch.nn as nn
 from transformers.transformer.sdpa import SDPA
 
 class MultiHeadSelfAttention(nn.Module):
-    def __init__(self, d_model, num_heads):
+    def __init__(self, d_model, num_heads, mask=None):
         super().__init__()
 
         if (d_model % num_heads != 0):
@@ -11,13 +10,14 @@ class MultiHeadSelfAttention(nn.Module):
 
         self.d_model = d_model
         self.num_heads = num_heads
+        self.mask = mask
         self.d_k = d_model // num_heads
         self.W_Q = nn.Linear(self.d_model, self.d_model)
         self.W_K = nn.Linear(self.d_model, self.d_model)
         self.W_V = nn.Linear(self.d_model, self.d_model)
         self.linear = nn.Linear(self.d_model, self.d_model)
 
-    def forward(self, v_k, q=None, mask=None):
+    def forward(self, v_k, q=None):
         B, T, _ = v_k.size()
 
         # Projection linears
@@ -34,7 +34,7 @@ class MultiHeadSelfAttention(nn.Module):
             tensr = tensr.view(B, T, self.num_heads, self.d_k).transpose(1, 2)
 
         # Scaled Dot-Product Attention
-        attn = SDPA(Q, K, V, mask)
+        attn = SDPA(Q, K, V, self.mask)
 
         # Concat
         attn = attn.transpose(1,2).contiguous().view(B, T, self.d_model)
