@@ -24,8 +24,9 @@ class Transformer(nn.Module):
         for e in self.encoder_blocks:
             enc_out = e(enc_out)
         
-        
-        dec_out = enc_out
+
+        PE_2 = get_positional_encoding(self.seq_len, self.d_model)
+        dec_out = enc_out + PE_2.unsqueeze(0)
         for d in self.decoder_blocks:
             dec_out = d(dec_out, enc_out)
         out = self.final_linear(out)
