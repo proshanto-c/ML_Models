@@ -16,8 +16,8 @@ def SDPA(Q:torch.Tensor, K: torch.Tensor, V:torch.Tensor, mask=None) -> torch.Te
         raise TypeError('All input tensors to the SDPA must be on the same device')
 
     dim_k = Q.size(-1)
-    sm = nn.Softmax()
-    out = torch.matmul(Q, K.T) / math.sqrt(dim_k)
+    sm = nn.Softmax(dim=-1)
+    out = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(dim_k)
 
     if mask is not None:
         out = out.masked_fill(mask == 0, float('-inf'))

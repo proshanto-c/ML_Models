@@ -15,7 +15,6 @@ find = {}
 [project]
 dynamic = ["version"]
 name = "proshantos_ml_models"
-version = "0.pt.tr.0.1"
 authors = [
     {name = "Proshanto Chanda"}
 ]
