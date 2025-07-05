@@ -1,8 +1,9 @@
 import torch
 import torch.nn as nn
+import math
 
 ## Scaled Dot-Product Attention
-def SDPA(Q:torch.Tensor, K: torch.Tensor, V:torch.Tensor) -> torch.Tensor:
+def SDPA(Q:torch.Tensor, K: torch.Tensor, V:torch.Tensor, mask=None) -> torch.Tensor:
     # Type checks
     tensors = [Q, K, V]
     for tensr in tensors:
@@ -14,7 +15,12 @@ def SDPA(Q:torch.Tensor, K: torch.Tensor, V:torch.Tensor) -> torch.Tensor:
     if Q.device != K.device or K.device != V.device:
         raise TypeError('All input tensors to the SDPA must be on the same device')
 
-    dim_k = K.shape[0]
+    dim_k = Q.size(-1)
     sm = nn.Softmax()
-    out = torch.matmul(sm(torch.matmul(Q, K.T) / dim_k), V)
+    out = torch.matmul(Q, K.T) / math.sqrt(dim_k)
+
+    if mask is not None:
+        out = out.masked_fill(mask == 0, float('-inf'))
+
+    out = torch.matmul(sm(out), V)
     return out
