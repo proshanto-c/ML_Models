@@ -4,9 +4,28 @@ from transformers.transformer.encoder import EncoderBlock
 from transformers.transformer.decoder import DecoderBlock
 import numpy as np
 
+default_params = {
+    'seq_len': 10,
+    'd_model': 512,
+    'n_enc_blocks': 6,
+    'n_dec_blocks': 6,
+    'n_out': 1000,
+    'mode': 'nlp',
+    'feature_size': None
+}
+
 class Transformer(nn.Module):
-    def __init__(self, seq_len, d_model, n_enc_blocks, n_dec_blocks, n_out, mode='nlp', feature_size=None):
+    def __init__(self, params=default_params):
         super().__init__()
+
+        seq_len = params['seq_len']
+        d_model = params['d_model']
+        n_enc_blocks = params['n_enc_blocks']
+        n_dec_blocks = params['n_dec_blocks']
+        n_out = params['n_out']
+        mode = params['mode']
+        feature_size = params['feature_size']
+        
 
         # Create input projection layer
         if mode.lower() == 'nlp':
